@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>메모입력</title>
+</head>
+<body>
+<script>
+    window.onload = function(){
+       const result = [[${result}]];
+        if (result){
+        alert(result);
+        }
+    }
+
+</script>
+    <h1>입력화면이에요</h1>
+    <form action = "/save" method = "post">
+        <textarea name = "content" placeholder="메모를 입력하세요"></textarea>
+        <button type = "submit">메모 입력</button>
+    </form>
+</body>
+</html>
