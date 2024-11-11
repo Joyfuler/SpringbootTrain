@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.demo.JUnitQuiz" tests="2" skipped="0" failures="0" errors="0" timestamp="2024-11-08T09:11:06" hostname="DESKTOP-17MTHIN" time="0.015">
+  <properties/>
+  <testcase name="junitQuiz3()" classname="com.example.demo.JUnitQuiz" time="0.013"/>
+  <testcase name="junitQuiz4()" classname="com.example.demo.JUnitQuiz" time="0.0"/>
+  <system-out><![CDATA[Hello!
+This is first test
+Hello!
+This is second test
+Bye!
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

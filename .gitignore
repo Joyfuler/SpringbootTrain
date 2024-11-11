@@ -4,5 +4,5 @@
 temp/
 bin/*.txt
 .gradle
-build/
 .metadata/
+.idea/

@@ -1,0 +1,26 @@
+-- 11/05
+
+@Bean 타입 선언시 new A(); 등 매번 객체를 생성하지 않더라도 사용 가능.
+단, 사용하는 곳에서도 @Bean 어노테이션을 사용해야 함.
+@Bean을 사용하지 않는 경우 툴에서 에러 밑줄이 발생하지는 않지만, 실제로는 와이어링되지 않으므로 실행시 오류 발생함.
+
+@SpringBootApplication이 아닌 곳이라면 @Bean은 그냥 생성할 수 없고, 
+@Configuration 어노테이션을 추가한 곳에서만 가져와서 사용할 수 있음. (설정클래스? --> @Configuration 어노테이션이 붙은 클래스를 의미함)
+
+
+-- 11/06
+
+@ComponentScan --> @Component 어노테이션이 붙은 클래스를 스캔하면서 Bean을 생성함.
+@Controller --> Controller임을 선언. 기본 동작은 @CoponentScan과 동일.(빈생성) --> 
+사용자로부터 요청 들어온 후 어떤 로직을 실행하고 경로로 이동할지 설정
+
+@Service --> Service임을 선언. 실제 로직이 동작하는 클래스임을 알림. (빈생성)
+@Repository --> Repository임을 선언. dao클래스임을 알림. (빈생성)
+
+선언한 부분은 추후에 자동으로 와이어링되어 사용할 수 있음.
+단, 생성을 위해서는 @SpringBootApplication과 같은 패키지 안에 있을 것. (하위 패키지는 가능, 다른 패키지 불가)
+
+model로 값을 받아왔는데 파란글씨로 nullPointerExeption? --> Bean 어노테이션이 제대로 붙었는지 확인 (Controller / Service / Repository)
+이후 Bean을 받아올 객체들 위에 AutoWired가 잘 붙었는지 확인할 것. 
+
+하나라도 제대로 없다면 오류가 발생한다! --> 잘 확인할 것.
