@@ -1,0 +1,65 @@
+-- 11/05
+
+@Bean 타입 선언시 new A(); 등 매번 객체를 생성하지 않더라도 사용 가능.
+단, 사용하는 곳에서도 @Bean 어노테이션을 사용해야 함.
+@Bean을 사용하지 않는 경우 툴에서 에러 밑줄이 발생하지는 않지만, 실제로는 와이어링되지 않으므로 실행시 오류 발생함.
+
+@SpringBootApplication이 아닌 곳이라면 @Bean은 그냥 생성할 수 없고, 
+@Configuration 어노테이션을 추가한 곳에서만 가져와서 사용할 수 있음. (설정클래스? --> @Configuration 어노테이션이 붙은 클래스를 의미함)
+
+
+-- 11/06
+
+@ComponentScan --> @Component 어노테이션이 붙은 클래스를 스캔하면서 Bean을 생성함.
+@Controller --> Controller임을 선언. 기본 동작은 @CoponentScan과 동일.(빈생성) --> 
+사용자로부터 요청 들어온 후 어떤 로직을 실행하고 경로로 이동할지 설정
+
+@Service --> Service임을 선언. 실제 로직이 동작하는 클래스임을 알림. (빈생성)
+@Repository --> Repository임을 선언. dao클래스임을 알림. (빈생성)
+
+선언한 부분은 추후에 자동으로 와이어링되어 사용할 수 있음.
+단, 생성을 위해서는 @SpringBootApplication과 같은 패키지 안에 있을 것. (하위 패키지는 가능, 다른 패키지 불가)
+
+model로 값을 받아왔는데 파란글씨로 nullPointerExeption? --> Bean 어노테이션이 제대로 붙었는지 확인 (Controller / Service / Repository)
+이후 Bean을 받아올 객체들 위에 AutoWired가 잘 붙었는지 확인할 것. 
+
+하나라도 제대로 없다면 오류가 발생한다! --> 잘 확인할 것.
+
+
+-- 11/07
+컨트롤러에서
+@ModelAttribute Memo memo  --> 객체를 패러미터로 받아서 만들 때
+@RequestParam("id") int id --> 패러미터 한개만 받음. 숫자로 변환 가능
+
+@GetMapping("detail/${id}") 와 같이 선언 후
+@PathVariable("id") int id --> 주소값에 있는 패러미터를 받아온다.
+
+@GetMapping("/detail/{id}")
+    public String detail(@PathVariable("id") int id, Model model){
+        // 패러미터로 받은 id를 매개변수로 사용해야 할 경우 @PathVariable 사용
+        model.addAttribute("memo", memoService.getMemo(id));
+        return "detail";
+    }
+
+삭제 / 수정 등 로직 수행 후 다른 로직이 있는 페이지로 이동하고 싶을 때는 return "redirect:/list" 등으로 redirect를 붙인다.
+뒤에 패러미터를 붙이고 싶은 경우에는 return "redirect:/detail/1" 과 같은 식으로 오도록 하면 됨.
+return "redirect:/detail"+memo.getId(); 와 같은 식.
+
+
+---
+
+스프링부트 프로그램시에는 Controller / Service / Repository / View단만 구현하지만,
+실제로는 tomcat의 dispatcher servlet이나 리턴받은 "list" 를 주소에 합쳐주는 view Resolver등의 파츠가 더 존재함.
+..
+[[${member.id}]] 같은 식으로 작성하여도 본래 브라우저는 인식 불가.
+템플릿 엔진이 이를 html로 변환하여 완성하고, 이를 브라우저로 보내서 출력하는 것.
+
+
+
+templates 안에 폴더를 만든 후 해당 페이지를 리턴하고 싶다면?
+return "list"; 대신 return "a/list" 등으로 입력해야만 해당 페이지로 이동가능.
+
+
+-- 11/08
+클래스에 직접 jdbc의 경로를 쓰지 않고, applcation.properties에 입력해서 대체 가능.
+JdbcTemplate를 @Autowired 해서 사용한다. 기존 jdbc보다 간편하게 jdbcTemplate.update(sql, 매개변수) 형식으로 간단히 사용 가능.

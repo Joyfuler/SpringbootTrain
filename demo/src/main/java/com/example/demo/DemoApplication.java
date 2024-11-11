@@ -12,12 +12,5 @@ public class DemoApplication {
 		SpringApplication.run(DemoApplication.class, args);
 	}
 
-	@Bean
-	public CommandLineRunner test (A a) {
-		return (args) -> {
-			a.mA();
-		};
-	}
-		
 	
 }

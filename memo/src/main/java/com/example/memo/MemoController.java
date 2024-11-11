@@ -3,9 +3,7 @@ package com.example.memo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class MemoController {
@@ -26,8 +24,32 @@ public class MemoController {
         //getParameter 대신 @modelAttribute 어노테이션을 통해 memo 객체로 자동으로 받아옴.
         System.out.println("memo객체:" + memo);
         model.addAttribute("result", memoService.saveMemo(memo));
-        return "result";
+        return "redirect:/list";
     }
 
+    @GetMapping("/list")
+    public String list(Model model){
+        model.addAttribute("memos", memoService.allList());
+        return "list";
+    }
 
+    @GetMapping("/detail/{id}")
+    public String detail(@PathVariable("id") int id, Model model){
+        // 패러미터로 받은 id를 매개변수로 사용해야 할 경우 @PathVariable 사용
+        model.addAttribute("memo", memoService.getMemo(id));
+        return "detail";
+    }
+
+    @PostMapping("/update")
+    public String update(@ModelAttribute Memo memo, Model model){
+        String result = memoService.updateMemo(memo);
+        model.addAttribute("result", result);
+        return "redirect:/detail/"+memo.getId();
+    }
+
+    @GetMapping("/delete")
+    public String delete(@RequestParam("id") int id, Model model){
+        model.addAttribute("result", memoService.deleteMemo(id));
+        return "redirect:/list";
+    }
 }

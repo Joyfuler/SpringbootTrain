@@ -17,32 +17,25 @@ public class MemoApplication {
 		SpringApplication.run(MemoApplication.class, args);
 	}
 
-	@Primary
-	@Bean // DAO로 가서 붙는다.
-	public DriverManagerDataSource dataSource(){
-		DriverManagerDataSource dataSource = new DriverManagerDataSource();
-		dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-		dataSource.setUsername("root");
-		dataSource.setPassword("12345");
-		dataSource.setUrl("jdbc:mysql://localhost:3306/jangdb?useSSL=false&serverTimezone=Asia/Seoul");
+//	@Primary
+//	@Bean // DAO로 가서 붙는다.
+//	public DriverManagerDataSource dataSource(){
+//		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+//		dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+//		dataSource.setUsername("root");
+//		dataSource.setPassword("12345");
+//		dataSource.setUrl("jdbc:mysql://localhost:3306/jangdb?useSSL=false&serverTimezone=Asia/Seoul");
+//
+//		return dataSource;
+//	}
 
-		return dataSource;
-	}
-
-	@Bean
-	public DriverManagerDataSource oracleDataSource() {
-		DriverManagerDataSource dataSource = new DriverManagerDataSource();
-		dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
-		dataSource.setUrl("jdbc:oracle:thin:@localhost:1521:xe");
-		dataSource.setUsername("system");
-		dataSource.setPassword("a1234");
-		return dataSource;
-	}
-
-	@Bean
-	public CommandLineRunner test(JdbcMemoRepository memoRepository){
-		return (args) -> {
-			System.out.println(memoRepository.getDataSource());
-		};
-	}
+//	// @Bean
+//	public DriverManagerDataSource oracleDataSource() {
+//		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+//		dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
+//		dataSource.setUrl("jdbc:oracle:thin:@localhost:1521:xe");
+//		dataSource.setUsername("system");
+//		dataSource.setPassword("a1234");
+//		return dataSource;
+//	}
 }

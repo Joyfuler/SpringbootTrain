@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <style>
+    body{
+      background-color: silver;
+    }
+
+  </style>
+</head>
+<body>
+  <h1>멤버 목록을 출력합니다.</h1>
+    <p th:if="${#lists.isEmpty(members)}">
+      데이터가 없습니다.
+    </p>
+    <table th:if="${not #lists.isEmpty(members)}">
+      <tr>
+        <th>멤버아이디</th>
+        <th>멤버이메일</th>
+        <th>암호</th>
+        <th>멤버명</th>
+        <th>가입일자</th>
+        <th>상세보기</th>
+      </tr>
+      <tr th:each="member : ${members}">
+        <td>[[${member.id}]]</td>
+        <td>[[${member.email}]]</td>
+        <td th:text="${member.password.substring(0, 2) + '*'.repeat(#strings.length(member.password) -2)}"></td>
+        <td>[[${member.username}]]</td>
+        <td th:text="${#dates.format(member.regdate, 'yyyy-MM-dd')}"></td>
+        <td><a th:href="@{/detail/{id}(id=${member.id}) }">상세페이지이동</a></td>
+      </tr>
+    </table>
+</body>
+</html>
