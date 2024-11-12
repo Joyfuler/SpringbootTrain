@@ -1,0 +1,37 @@
+model.addAttribute("paging", memoService.getMemos(pageable)); 
+로 html 페이지에 데이터를 보내고, 받은 후 페이징 처리하는 방법
+
+<div th:if="${!paging.isEmpty()}"> (해당 페이지에 데이터가 존재하는 경우)
+	<a th:if=${!paging.isFirst()} th:text="이전"> (만일 1페이지가 아니라면 이전 버튼이 보이도록 노출)
+
+---
+
+localhost:8080/list?page=1과 같이 보내고, 받는 곳에서는 page=1에 대한 패러미터 처리를 하지 않아도 자동으로 페이징 처리가 되도록 해준다.
+&size=5&sort=id,desc 등으로 패러미터에 직접 값을 넣어서 처리가 되도록 할 수도 있다.
+이 패러미터 역시 직접 처리하지 않더라도 pageable 객체에서 자동으로 처리해줌.
+
+이전 페이지는 <a th:if=${!paging.isFirst()} 
+		th:href="@{'/list?page=' + ${paging.getNumber() -1 }}" 과 같은 식으로 설정. (paging.getNumber()를 통해 현재 페이지 로딩 가능)
+
+페이지사이즈만큼의 페이지 출력을 위해서는 반복문 사용
+<a th:each=": ${#numbers.sequence(0, paging.getTotalPages()) -1 }">
+	
+</a>
+
+실제로는 0~4페이지가 들어가지만, 리턴받는 값은 1~5이므로 -1이 필요함.
+
+${#numbers.sequence(0,paging.getTotalPages())} 와 같이, 앞에 #이 있는 경우는 thymyleaf에서 주는 객체.
+
+th:each="num : ${#numbers.sequence(0, ~);  num으로 설정한 변수는 numStat을 통해 출력한다.
+th:text="${numStat.count}"
+th:href="@{/list?page=' + ${numStat.index} }"
+
+index와 count의 차이? index는 0부터, count는 1부터 시작.
+
+
+부트스트랩을 이용했을 때 현재 페이지를 굵게 표시하는 방법.
+th:classappend="${paging.getNumber() == numStat.index()} ? 'active'">
+class에 active가 생기면서 현재 페이지의 디자인이 변경된다.
+
+부트스트랩은 해당 태그에 class를 붙이거나 변경하는것이 중요하므로..
+

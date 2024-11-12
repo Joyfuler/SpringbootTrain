@@ -1,5 +1,7 @@
 package com.example.orm;
 
+import com.example.orm.memo.Memo;
+import com.example.orm.memo.MemoRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,7 +11,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
 class OrmApplicationTests {
 
 	@Autowired
@@ -34,6 +35,11 @@ class OrmApplicationTests {
 		List<Memo> memos = memoRepository.findAll();
 		assertEquals("안녕2!", memos.get(memos.size()-1).getContent());
 		assertEquals(2, memos.size());
+
+		List<Memo> memoList = memoRepository.findByContentContaining("e");
+		// CntentContaining이라는 메소드 명을 사용하여 like ? escape '\\'로 사용 가능 ('%' 와 동일)
+		assertEquals(0, memoList.size());
+
 
 		// 일반적으로 Memo memo와 같은 식으로 받아왔으나, 이 경우에는 Optional<타입> 으로 받아야 함.
 		// 테스팅할 때는 있는 값 / 없는 값 모두 대입해볼것.

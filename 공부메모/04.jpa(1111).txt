@@ -1,0 +1,22 @@
+jpa에서는 직접 쿼리를 입력하지 않더라도 JpaRepository를 autowired하고 
+save()나 delete() 등 기본 메소드를 활용하는 것만으로도 일반적인 CRUD 구현이 가능.
+
+그 외에 많이 사용하는 검색, 정렬 등은 Jpa 문서를 참고하고, 해당 메소드의 이름을 맞춰주는 것으로 사용이 가능하다.
+
+-- 페이징 처리
+비교적 복잡한 페이징 처리 역시 ..domain 을 import하여 간단히 사용 가능.
+
+Repository --> Page<Memo> findAll(Pageable pageable); 로 선언
+Service --> repository autowired한 후 Page<Memo> getMemos(Pageable pageable){
+	return memoRepository.findAll(pageable);
+} 로 가져온다.
+
+Controller에서는 기본 페이지와 페이지당 사이즈, 정렬 기준 등을 설정 가능.
+@GetMapping("/list")
+public String paging(
+	@PageableDefault(page=0, size=5, sort="id", direction=Sort.Direction.DESC) Pageable pageable)
+	// 0페이지 기본, 한페이지당 5개, id 기준으로 내림차순 정렬.
+
+
+test 시에는 spring.jpa.hibernate.ddl-auto=create로 설정하지만,
+실제로 웹에 올릴 때에는 매번 테이블을 초기화하므로 update로 변경하자.

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Member List</title>
+</head>
+<body>
+	<table>
+		<tr>
+			<th>번호</th>
+			<th>이메일</th>
+			<th>비번</th>
+			<th>이름</th>
+			<th>가입날짜</th>
+		</tr>
+			
+		<tr th:each = "member : ${members}">
+			<th>[[${member.id}]]</th>
+			<th>[[${member.email}]]</th>
+			<th>[[${member.password}]]</th>
+			<th>[[${member.username}]]</th>
+			<th>[[${member.regDate}]]</th>
+			<th><a th:href="@{/detail/{id} (id = ${member.id})}">[[${member.username}]]</a></th>
+		</tr>			
+	</table>
+</body>
+</html>

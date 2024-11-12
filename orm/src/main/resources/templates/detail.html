@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<h1>상세보기</h1>
+[[${memo.get().id}]] 번 메모
+<form action = "/update" method = "post">
+  <input type = "hidden" name = "id" th:value="${memo.get().id}"/>
+  <input type = "text" name = "content" th:value="${memo.get().content}"/>
+  <button type = "submit">메모 수정</button>
+</form>
+<form action="/delete">
+  <input type = "hidden" name = "id" th:value="${memo.get().id}"/>
+  <button type="submit">사쿠죠</button>
+</form>
+<button onclick = "location.href='/list'">모크로크</button>
+</body>
+</html>
