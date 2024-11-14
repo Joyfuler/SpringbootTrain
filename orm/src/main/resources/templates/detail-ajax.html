@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>멤버상세</title>
+</head>
+<body>
+      <h1>멤버입니다</h1>
+      <div id = "result">
+
+      </div>
+      <script>
+           const URL = "/detailToJson";
+
+           window.onload = function getData(){
+                const xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = () => {
+                    if (xhr.readyState == xhr.DONE){
+                        if (xhr.status == 20){
+                            let member = JSON.parse(xhr.responseText);
+                            renderHTML(member);
+                        }
+                    }
+                }
+
+                xhr.open("GET", URL);
+                xhr.send();
+          }
+
+          function renderHTML(member){
+                let output = "";
+                output += `<ul>
+                                <li>
+                                    아이디 : ${member.id}
+                                </li>
+                                <li>
+                                    이메일 : ${member.email }
+                            </ul>`;
+      </script>
+</body>
+</html>

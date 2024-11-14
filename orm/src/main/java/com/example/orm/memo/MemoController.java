@@ -32,11 +32,11 @@ public class MemoController {
         return "list";
     }
     // 들어오는 패러미터를 처리하지 않더라도 ?page=1을 자동으로 처리해줌.
-    @GetMapping("list")
-    public String paging(@PageableDefault(page=0, size=3, sort="id", direction = Sort.Direction.ASC) Pageable pageable, Model model){
-        model.addAttribute("paging", memoService.getMemos(pageable));
-        return "list";
-    }
+//    @GetMapping("list")
+//    public String paging(@PageableDefault(page=0, size=3, sort="id", direction = Sort.Direction.ASC) Pageable pageable, Model model){
+//        model.addAttribute("paging", memoService.getMemos(pageable));
+//        return "list";
+//    }
 
 
     @GetMapping("detail/{id}")

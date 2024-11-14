@@ -1,0 +1,13 @@
+body{
+    background-color : lightblue;
+}
+
+ul {
+   list-style-type : none;
+   margin: 0;
+}
+
+img{
+    width: 50px;
+    height: 50px;
+}

@@ -50,7 +50,6 @@ public class MemberApplicationTests {
         member.setUsername("장길산");
         member.setUpdateDate(Date.valueOf(LocalDate.now()));
         memberRepository.save(member);
-
         // memberRepository.deleteById(memberRepository.count()-1);
 
     }
