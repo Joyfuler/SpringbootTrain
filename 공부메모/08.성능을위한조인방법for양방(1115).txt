@@ -1,0 +1,20 @@
+JDBC에서 하듯, 클래스에 다른 클래스를 참조 타입으로 넣는 것은 동일.
+Dto 클래스를 따로 만들고 받은 객체를 dto 형식으로 변경한다.
+
+List<StudentDto> studentDtos = getStudent(teacher) // 선생님의 id로 학생 목록을 가져오고 싶다면
+	.stream()
+	.map(student -> new StudentDto(student))
+	.toList(); // student 객체를 매개변수로 넣어 StudentDto의 List를 리턴하도록 한다.
+이를 이용하여 선생님의 번호를 패러미터로 입력 시 해당 선생님이 담당하는 학생들의 list를 출력 가능.
+RestController를 이용하면 json 형태로 해당 데이터를 즉시 확인할 수 있다.
+
+--
+
+예금과 출금 등, 꼭 묶어서 사용해야 하는 트랜잭션 처리를 springboot에서 처리하는 방법
+일반적으로 Service 클래스에서 @transactional 어노테이션을 붙인다. (select절은 readonly = true 입력)
+만일 실패하는 경우는 rollback 진행.
+
+-- 
+
+propagation = Propagation.REQUIRES_NEW 
+--> 메소드에 데이터가 왔을 때 새로운 트랜잭션이 시작됨. (데이터가 섞이지 않도록 하기 위함)

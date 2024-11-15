@@ -4,10 +4,14 @@ import com.example.mapping.onetoone.Locker;
 import com.example.mapping.onetoone.LockerRepository;
 import com.example.mapping.onetoone.Member;
 import com.example.mapping.onetoone.MemberRepository;
+import com.example.mapping.transaction.Account;
+import com.example.mapping.transaction.AccountRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.math.BigInteger;
 
 @SpringBootTest
 class MappingApplicationTests {
@@ -45,23 +49,15 @@ class MappingApplicationTests {
 //		Assertions.assertThat(lockerRepository.findById(1L).get().getMember().getName()).isEqualTo("m1");
 	}
 
+	@Autowired
+	AccountRepository accountRepository;
 
-//	@Test
-//	void memberMapping(){
-//		Member member = new Member();
-//		member.setId(1L);
-//		member.setName("홍길동");
-//		memberRepository.save(member);
-//
-//		Locker locker = new Locker();
-//		locker.setId(1L);
-//		locker.setLoc("5층");
-//		locker.setMember(member);
-//		lockerRepository.save(locker);
-//
-//		// Assertions.assertThat(lockerRepository.findById(1L).get().getLoc()).isEqualTo("5층");
-//
-//
-//	}
+	@Test
+	public void accountTest(){
+		accountRepository.save(new Account(new BigInteger("43094236098346")));
+		accountRepository.save(new Account(new BigInteger("1")));
+
+
+	}
 
 }
