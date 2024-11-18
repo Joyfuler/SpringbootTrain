@@ -1,11 +1,11 @@
-package com.springboot3.blogMaking;
+package com.springboot3.blogMaking.controller;
 
+import com.springboot3.blogMaking.Article;
+import com.springboot3.blogMaking.BlogService;
 import com.springboot3.blogMaking.dto.AddArticleRequest;
 import com.springboot3.blogMaking.dto.ArticleResponse;
 import com.springboot3.blogMaking.dto.UpdateArticleRequest;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
-import org.hibernate.sql.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

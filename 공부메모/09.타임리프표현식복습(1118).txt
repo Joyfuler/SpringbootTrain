@@ -1,0 +1,19 @@
+IT 선생님 사정으로 인한 자습.
+
+thymeleaf
+${} 변수의 값을 표현할 때 사용
+#{} 속성 파일 값 표현식
+@{} URL 표현식
+*{} th:object를 통해 객체 접근시 사용.
+
+th:text 텍스트를 표현 ex) th:text=${person.name}
+th:each 반복문 th:each="person : ${persons}"
+th:if 조건문 th:if="${person.age}>=20"
+th:href 이동 경로 th:href="@{/persons(id=${person.id})}"
+th:object="${person}"
+
+
+@EntityListeners 어노테이션? --> 엔티티가 생성 / 수정되는 시간을 기록하기 위한 어노테이션.
+@CreatedDate --> 엔티티가 생성된 시간을 created_at 컬럼에 저장한다.
+@LastModifiedDate 엔티티가 수정된 마지막 시간을 updated_at 컬럼에 저장한다.
+@EnableJpaAuditing 컨트롤러에 다는 어노테이션. 엔티티의 생성시간과 수정시간을 자동으로 db에 반영.

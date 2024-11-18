@@ -2,6 +2,7 @@ package com.springboot3.blogMaking;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springboot3.blogMaking.dto.AddArticleRequest;
+import com.springboot3.blogMaking.dto.UpdateArticleRequest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -128,5 +129,40 @@ class BlogApiControllerTest {
 
         Assertions.assertThat(articles).isEmpty();
     }
+
+    @DisplayName("updateArticle: 블로그 글 수정에 성공.")
+    @Test
+    public void updateArticle() throws Exception{
+        final String url = "/api/articles/{id}";
+        final String title = "title";
+        final String content = "content";
+
+        Article savedArticle = blogRepository.save(Article.builder()
+                        .title(title)
+                        .content(content)
+                        .build());
+
+        final String newTitle = "새로운타이틀";
+        final String newContent = "내용을 변경해볼까?";
+
+        UpdateArticleRequest requestObj = new UpdateArticleRequest(newTitle, newContent);
+
+        // 수정이므로 put 메소드. 주소는 url + id가 들어가며 수정할 내용을 집어넣는다.
+        ResultActions result = mockMvc.perform(put(url, savedArticle.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(requestObj)));
+
+        // 세팅이 완료되었으면 결과를 확인하고 assertThat테스트를 진행한다.
+
+        result.andExpect(MockMvcResultMatchers.status().isOk());
+
+        Article article = blogRepository.findById(savedArticle.getId()).get();
+        // Optional<Article> 을 get으로 가져와 Article 타입으로 변환가능.
+
+        Assertions.assertThat(article.getTitle()).isEqualTo(newTitle);
+        Assertions.assertThat(article.getContent()).isEqualTo(newContent);
+
+    }
+
 }
 
