@@ -2,7 +2,9 @@ package com.springboot3.blogMaking;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springboot3.blogMaking.dto.AddArticleRequest;
+import com.springboot3.blogMaking.dto.Article;
 import com.springboot3.blogMaking.dto.UpdateArticleRequest;
+import com.springboot3.blogMaking.repository.BlogRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +21,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @SpringBootTest

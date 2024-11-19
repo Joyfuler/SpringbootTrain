@@ -1,6 +1,5 @@
 package com.springboot3.blogMaking.dto;
 
-import com.springboot3.blogMaking.Article;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

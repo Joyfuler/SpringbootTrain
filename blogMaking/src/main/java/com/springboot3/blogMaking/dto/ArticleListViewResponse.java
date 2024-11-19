@@ -1,9 +1,6 @@
 package com.springboot3.blogMaking.dto;
 
-import com.springboot3.blogMaking.Article;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
 
 @Getter
 public class ArticleListViewResponse {

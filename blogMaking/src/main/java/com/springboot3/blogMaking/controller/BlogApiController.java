@@ -1,7 +1,7 @@
 package com.springboot3.blogMaking.controller;
 
-import com.springboot3.blogMaking.Article;
-import com.springboot3.blogMaking.BlogService;
+import com.springboot3.blogMaking.dto.Article;
+import com.springboot3.blogMaking.service.BlogService;
 import com.springboot3.blogMaking.dto.AddArticleRequest;
 import com.springboot3.blogMaking.dto.ArticleResponse;
 import com.springboot3.blogMaking.dto.UpdateArticleRequest;
@@ -48,7 +48,6 @@ public class BlogApiController {
     @DeleteMapping("/api/articles/{id}")
     public ResponseEntity<Void> deleteArticle(@PathVariable("id") Long id){
         blogService.delete(id);
-
         return ResponseEntity.ok().build();
     }
 
