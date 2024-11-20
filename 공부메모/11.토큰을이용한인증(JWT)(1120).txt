@@ -1,0 +1,44 @@
+사용자가 아이디 / 비밀번호를 서버에 전달 -> 서버에서는 유효성 확인 후 토큰 응답.
+사용자는 이 토큰을 저장하고, 인증 필요시 토큰을 함께 보내는 흐름으로 진행.
+
+토큰 정보를 변경하는 경우 서버에서는 유효하지 않은 토큰으로 처리하므로, 무결성을 지킬 수 있음.
+
+JSON WEB TOKEN(JWT)는 헤더와 내용, 서명 세 가지로 이루어져 있음. 아래와 같은 형식으로 이루어짐
+{
+	"iss": "11@gmail.com",
+	"iat": 1622370878
+	"exp" : 1622370878
+	"https" : https://localhost:8080/claims/is_admin" : true,
+	"email" : "11@gmail.com",
+	"hello" : "인사말입니다."
+}
+
+키와 값 한 덩이를 클레임이라 하며, 이런 클레임은 공개 클레임과 비공개 클레임이 존재한다.
+
+- 코드가 상당히 기므로 대략적인 흐름을 정리해서 기록.
+1 ) 토큰 생성 - generateToken(), makeToken() 을 통해서 유저 정보로 토큰을 생성한다.
+토큰이 무사히 생성되면 set 메서드를 통해 값들을 세팅한다.
+비공개 되어야 하는 값들은 HS256 알고리즘을 통해 암호화하고, 만료하는 일자도 함께 세팅한다.
+
+2) 토큰 검증 - isValidToken()
+유효한 키인지를 Jwts.parser() 함수를 통해 검증한다. jwtProperties.getSecretKey() 에 token 객체를 넣고,
+true를 반환하면 문제가 없는 토큰, false를 반환하면 유효하지 않은 토큰이 된다.
+
+3) 토큰을 기반으로 유저 정보 리턴 - getAuthentication(token)
+매개변수로 가져온 token을 Claims 객체로 만든다.
+이후 new UsernamePasswordAuthenticationToken() 에 토큰값과 claims에 들어있는 유저 이메일 주소 등의 정보를 반환한다.
+
+
+테스트는 given - when - then 형식으로 작성한다.
+1) given :테스트를 위한 더미 유저를 생성한다.
+2) when : generateToken() 을 이용해 given에서 만든 유저의 토큰을 만든다.
+3) then : jwt 라이브러리를 이용해 암호화된 토큰을 복호화하고, 받은 user의 id값이 첫 given에서
+만든 id와 동일한지를 비교한다.
+
+--- 토큰만료여부 테스트
+만일 만료일을 현재보다 이전으로 설정하면 이미 만료되어 무효한 토큰이 된다.
+테스트에서는 new Date().getTime() - Duration.ofDays(7) 등으로 설정.
+유효하지 않은 경우에는 assertThat(provider.validToken(token)).isFalse(); 로 여부를 체크한다.
+
+--- 유효토큰시 인증 정보를 담은 Authentication 객체 반환
+getAuthentication() 을 거쳐 가져온 subject와 given용으로 만든 유저 정보를 비교해본다.
