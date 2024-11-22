@@ -20,70 +20,70 @@ import java.util.Map;
 @SpringBootTest
 public class TokenProviderTest {
     @Autowired
-    private TokenProvider provider;
+    private TokenProvider tokenProvider;
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private JwtProperties jwtProperties;
 
-    @DisplayName("generateToken(): 유저 정보와 만료 기간을 전달해 토큰을 만든다.")
+    @DisplayName("generateToken() : 유저 정보와 만료 기간을 전달해 토큰")
     @Test
     void generateToken(){
-        User tokenUser = userRepository.save(User.builder()
-                .email("user@gmail.com")
+        // 테스트용 더미데이터 1개 생성
+        User testUser = userRepository.save(User.builder()
+                .email("user.gmail.com")
                 .password("test")
                 .build());
 
-        String token = provider.generateToken(tokenUser, Duration.ofDays(14));
+        String token = tokenProvider.generateToken(testUser, Duration.ofDays(14));
+        // 만료일 14일
+
         Long userId = Jwts.parser()
                 .setSigningKey(jwtProperties.getSecretKey())
                 .parseClaimsJws(token)
                 .getBody()
                 .get("id", Long.class);
 
-        Assertions.assertThat(userId).isEqualTo(tokenUser.getId());
+        Assertions.assertThat(userId).isEqualTo(testUser.getId());
     }
 
-    @DisplayName("valieToken(): 만료된 토큰인 때 유효성 검증 실패하는지 테스트")
+    @DisplayName("validToken() : 만료된 토큰시 유효성 검증에 실패")
     @Test
-    public void isValidToken(){
-        String token = JwtFactory.builder().expiration
-                (new Date(new Date().getTime() - Duration.ofDays(14).toMillis())).build()
-                .createToken(jwtProperties);
+    void isValidToken(){
+        String token = JwtFactory.builder()
+                .expiration(new Date(new Date().getTime() - Duration.ofDays(7).toMillis()))
+                .build().createToken(jwtProperties);
 
-        boolean result = provider.validToken(token);
+        boolean result = tokenProvider.ValidToken(token);
         Assertions.assertThat(result).isFalse();
+        // 만료일을 현재보다 이전으로 설정.
     }
 
-    @DisplayName("getAuthentication() : 토큰 정보가 정확할 경우 인증 정보를 가져올 수 있다.")
+    @DisplayName("getAuthentication(): 토큰 기반으로 인증 정보를 가져온다.")
     @Test
-    public void getAuthentication(){
-        String userEmail = "user@gmail.com";
+    void getAuthentication(){
+        String userEmail = "user@email.com";
         String token = JwtFactory.builder()
                 .subject(userEmail)
                 .build()
                 .createToken(jwtProperties);
 
-        Authentication authentication = provider.getAuthentication(token);
-        Assertions.assertThat(((UserDetails) authentication.getPrincipal())
-                        .getUsername())
-                        .isEqualTo(userEmail);
-
+        Authentication authentication = tokenProvider.getAuthentication(token);
+        Assertions.assertThat(((UserDetails)authentication.getPrincipal()).getUsername()).isEqualTo(userEmail);
     }
 
-    @DisplayName("getUserId() : 토큰으로 유저 ID를 가져올 수 있는지 테스트.")
+    @DisplayName("getUserId(): 토큰으로 유저 ID 가져오기")
     @Test
-    public void getUserId(){
+    void getUserId(){
         Long userId = 1L;
         String token = JwtFactory.builder()
                 .claims(Map.of("id", userId))
                 .build()
                 .createToken(jwtProperties);
 
-        Long userIdByToken = provider.getUserId(token);
+        Long userIdByToken = tokenProvider.getUserId(token);
         Assertions.assertThat(userIdByToken).isEqualTo(userId);
     }
-
 
 
 }

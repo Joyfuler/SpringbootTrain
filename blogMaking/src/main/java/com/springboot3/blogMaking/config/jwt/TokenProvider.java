@@ -18,69 +18,61 @@ import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
-// 서비스 코드?!
 public class TokenProvider {
     private final JwtProperties jwtProperties;
 
-    // 토큰 생성 메서드. 패러미터로 만료되는 시간과 유저 정보를 받는다.
-    // 이후 set ~ 메서드에 이 값을 다른 곳에 넣을 수 있도록 한다.
-    // 암호화는 비공개되는 값을 HS256 방식으로 암호화한다.
-    public String generateToken(User user, Duration expiredAt){
-        Date now = new Date();
-        return makeToken(new Date(now.getTime() + expiredAt.toMillis()), user);
+    public String generateToken(User user, Duration expiredDuration) {
+        Date nowDate = new Date();
+        return makeToken(new Date(nowDate.getTime() + expiredDuration.toMillis()), user);
     }
 
-    private String makeToken(Date expireDate, User user){
-        Date now = new Date();
+    public String makeToken(Date expire, User user){
+        Date nowDate = new Date();
         return Jwts.builder()
-                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-                .setIssuer(jwtProperties.getIssuer())
-                .setIssuedAt(now)
-                .setExpiration(expireDate)
-                .setSubject(user.getEmail())
-                .claim("id", user.getId())
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE) // 헤더타입.
+                .setIssuer(jwtProperties.getIssuer()) // 발급자
+                .setIssuedAt(nowDate) // 발급된 시각
+                .setExpiration(expire) // 만료되는 일시
+                .setSubject(user.getEmail()) // 토큰의 주제(사용자의 이메일을 테마로 사용)
+                .claim("id", user.getId()) // 클레임(정보)로 id를 추가.
                 .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecretKey())
-                .compact();
+                //HS256 알고리즘과 비밀키를 사용하여 암호화.
+                .compact(); // 문자열로 변환 후 반환. (String type)
     }
 
-    // 잘못된 토큰이 아닌지 검증한다.
-    // 만일 에러 발생시 유효하지 않은 토큰이므로 false 반환.
-    // 검증 후 문제가 없다면 true를 반환한다.
-    public boolean validToken(String token){
+    public boolean ValidToken(String token){
         try {
             Jwts.parser()
                     .setSigningKey(jwtProperties.getSecretKey())
                     .parseClaimsJws(token);
+                    // 비밀키를 가져와 토큰 파싱. 유효하지 않은 경우 오류가 발생한다.
             return true;
+
         } catch (Exception e){
             return false;
         }
     }
-
-    // 토큰을 기반으로 해당 유저의 정보를 리턴한다.
-    // User의 경우는 스프링 시큐리티에서 제공하는 User 클래스를 임포트해 사용할것.
     public Authentication getAuthentication(String token){
         Claims claims = getClaims(token);
-        Set<SimpleGrantedAuthority> authorities =
-                Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
+        Set<SimpleGrantedAuthority> authorities = Collections.singleton(
+                new SimpleGrantedAuthority("ROLE_USER"));
+        // 기본 권한을 ROLE_USER로 설정.
 
-        return new UsernamePasswordAuthenticationToken
-                (new org.springframework.security.core.userdetails.User
-                        (claims.getSubject(), "", authorities),
-                        token, authorities);
+        return new UsernamePasswordAuthenticationToken(new org.springframework.security.core.userdetails.User(claims.getSubject(), "", authorities), token, authorities);
     }
 
+    // 토큰에서 유저 정보를 리턴.
     public Long getUserId(String token){
         Claims claims = getClaims(token);
         return claims.get("id", Long.class);
+        // id값을 가져오고, 타입은 Long으로 설정한다.
     }
 
-    public Claims getClaims(String token){
+    // 토큰 내의 클레임 데이터를 추출한다. 클레임 본문을 반환.
+    private Claims getClaims(String token){
         return Jwts.parser()
                 .setSigningKey(jwtProperties.getSecretKey())
                 .parseClaimsJws(token)
                 .getBody();
     }
-
 }
-

@@ -14,19 +14,20 @@ import java.util.Map;
 
 @Getter
 public class JwtFactory {
-    private String subject = "test@email.com";
+    private String subject = "test@gmail.com";
+    // 테마 - 유저 이메일 정보.
     private Date issuedAt = new Date();
+    // 토큰을 발행한 일자 = 현재
     private Date expiration = new Date(new Date().getTime() + Duration.ofDays(14).toMillis());
-    // 만료일은 14일 뒤?
-
+    // 현재 시간에서 14일 뒤를 만료일로 설정.
     private Map<String, Object> claims = Collections.emptyMap();
 
     @Builder
     public JwtFactory(String subject, Date issuedAt, Date expiration,
                       Map<String, Object> claims){
-        this.subject = (subject != null ? subject : this.subject);
-        this.issuedAt = (issuedAt != null ? issuedAt : this.issuedAt);
-        this.expiration = (expiration != null ? expiration : this.expiration);
+        this.subject = (subject != null? subject : this.subject);
+        this.issuedAt = (issuedAt != null? issuedAt : this.issuedAt);
+        this.expiration = (expiration != null? expiration : this.expiration);
         this.claims = (claims != null ? claims : this.claims);
     }
 
@@ -34,7 +35,6 @@ public class JwtFactory {
         return JwtFactory.builder().build();
     }
 
-    // 유저의 값을 가져와서 암호화하고 토큰을 생성한다. (jwt 라이브러리를 활용한다)
     public String createToken(JwtProperties jwtProperties){
         return Jwts.builder()
                 .setSubject(subject)
@@ -45,9 +45,6 @@ public class JwtFactory {
                 .addClaims(claims)
                 .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecretKey())
                 .compact();
-
     }
-
-
 
 }
