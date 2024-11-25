@@ -6,3 +6,4 @@ bin/*.txt
 .gradle
 .metadata/
 .idea/
+blogMaking/src/main/resources/application.yml
