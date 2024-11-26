@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -18,9 +19,8 @@ public class BlogApiController {
     private final BlogService blogService;
 
     @PostMapping("/api/articles")
-    public ResponseEntity<Article> addArticle(@RequestBody AddArticleRequest request){
-        Article newArticle = blogService.save(request);
-
+    public ResponseEntity<Article> addArticle(@RequestBody AddArticleRequest request, Principal principal){
+        Article newArticle = blogService.save(request, principal.getName());
         // HTTP에 응답할 때 리턴되는 값을 반환. 잘 되면 200 ~ 201. 400은 요청 값 오류,
         // 404는 페이지 없음, 500은 서버 문제 (꺼짐 등)
 
