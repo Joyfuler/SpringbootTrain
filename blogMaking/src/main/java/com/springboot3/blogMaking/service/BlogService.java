@@ -6,6 +6,7 @@ import com.springboot3.blogMaking.dto.UpdateArticleRequest;
 import com.springboot3.blogMaking.repository.BlogRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,7 +30,11 @@ public class BlogService {
     }
 
     public void delete(Long id){
-        blogRepository.deleteById(id);
+        Article article = blogRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(id + "번의 글을 찾지 못했습니다."));
+
+        authorizeArticleAuthor(article);
+        blogRepository.delete(article);
     }
 
 
@@ -42,5 +47,13 @@ public class BlogService {
 
         return article;
 
+    }
+
+    private static void authorizeArticleAuthor(Article article){
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        if (!article.getAuthor().equals(userName)){
+            throw new IllegalArgumentException("권한이 없습니다.");
+        }
     }
 }

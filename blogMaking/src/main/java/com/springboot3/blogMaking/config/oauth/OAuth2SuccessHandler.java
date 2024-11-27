@@ -42,8 +42,13 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String refreshToken = tokenProvider.generateToken(user, REFRESH_TOKEN_DURATION);
         // 14일 만료일을 가진 리프레시 토큰을 생성한다.
         saveRefreshToken(user.getId(), refreshToken);
+        addRefreshTokenToCookie(request, response, refreshToken);
 
+        String accessToken = tokenProvider.generateToken(user, ACCESS_TOKEN_DURATION);
+        String targetUrl = getTargetUrl(accessToken);
 
+        clearAuthenticationAttributes(request, response);
+        getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 
     private void saveRefreshToken(Long userId, String newRefreshToken){
