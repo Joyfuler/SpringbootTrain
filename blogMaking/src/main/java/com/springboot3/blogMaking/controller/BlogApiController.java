@@ -23,7 +23,6 @@ public class BlogApiController {
         Article newArticle = blogService.save(request, principal.getName());
         // HTTP에 응답할 때 리턴되는 값을 반환. 잘 되면 200 ~ 201. 400은 요청 값 오류,
         // 404는 페이지 없음, 500은 서버 문제 (꺼짐 등)
-
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(newArticle);
     }

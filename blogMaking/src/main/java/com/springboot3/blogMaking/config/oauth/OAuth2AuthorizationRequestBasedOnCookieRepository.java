@@ -15,6 +15,10 @@ public class OAuth2AuthorizationRequestBasedOnCookieRepository implements Author
     public final static String OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME = "oauth2_auth_request";
     public final static int COOKIE_EXPIRE_SECONDS = 18000;
 
+    @Override
+    public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request, HttpServletResponse response) {
+        return this.loadAuthorizationRequest(request);
+    }
 
     @Override
     public OAuth2AuthorizationRequest loadAuthorizationRequest(HttpServletRequest request) {
@@ -30,11 +34,6 @@ public class OAuth2AuthorizationRequestBasedOnCookieRepository implements Author
         }
 
         CookieUtil.addCookie(response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME, CookieUtil.serialize(authorizationRequest), COOKIE_EXPIRE_SECONDS);
-    }
-
-    @Override
-    public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request, HttpServletResponse response) {
-        return this.loadAuthorizationRequest(request);
     }
 
     public void removeAuthorizationRequestCookies(HttpServletRequest request, HttpServletResponse response){

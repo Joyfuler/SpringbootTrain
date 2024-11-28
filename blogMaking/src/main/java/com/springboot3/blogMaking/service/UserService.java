@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
     // 회원 정보를 추가하는 메서드. 회원가입 등에서 사용
     private final UserRepository userRepository;
-    //private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     // 저장할 때 password는 암호화를 진행하여 저장한다.
     public Long save(AddUserRequest dto){

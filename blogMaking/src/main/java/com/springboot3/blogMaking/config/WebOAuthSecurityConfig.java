@@ -3,11 +3,10 @@ package com.springboot3.blogMaking.config;
 import com.springboot3.blogMaking.config.jwt.TokenProvider;
 import com.springboot3.blogMaking.config.oauth.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.springboot3.blogMaking.config.oauth.OAuth2SuccessHandler;
-import com.springboot3.blogMaking.config.oauth.OAuth2UserCustomerService;
+import com.springboot3.blogMaking.config.oauth.OAuth2UserCustomService;
 import com.springboot3.blogMaking.repository.RefreshTokenRepository;
 import com.springboot3.blogMaking.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.antlr.v4.runtime.Token;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,11 +15,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.client.OAuth2AuthorizationSuccessHandler;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
-import org.springframework.security.oauth2.core.OAuth2AuthorizationException;
-import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -29,9 +24,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @RequiredArgsConstructor
 @Configuration
 public class WebOAuthSecurityConfig {
-    private final OAuth2UserCustomerService oAuth2UserCustomerService;
+    private final OAuth2UserCustomService oAuth2UserCustomerService;
     private final TokenProvider tokenProvider;
-    private RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final UserService userService;
 
     @Bean
@@ -47,6 +42,7 @@ public class WebOAuthSecurityConfig {
 
     }
     // 기존 폼 로그인과 세션 기능을 비활성화한다.oAuth 기반의 토큰 형식으로 인증하기 때문.
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
         return httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
@@ -82,5 +78,8 @@ public class WebOAuthSecurityConfig {
         return new OAuth2AuthorizationRequestBasedOnCookieRepository();
     }
 
-
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
 }

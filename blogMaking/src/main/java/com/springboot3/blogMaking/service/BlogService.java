@@ -16,10 +16,6 @@ import java.util.List;
 public class BlogService {
     private final BlogRepository blogRepository;
 
-    public Article save(AddArticleRequest addArticleRequest, String userName){
-        return blogRepository.save(addArticleRequest.toEntity(userName));
-    }
-
     public List<Article> findAll(){
         return blogRepository.findAll();
     }
@@ -43,6 +39,7 @@ public class BlogService {
         Article article = blogRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found :" + id));
 
+        authorizeArticleAuthor(article);
         article.update(request.getTitle(), request.getContent()); // 받아온 값으로 업데이트.
 
         return article;
@@ -56,4 +53,9 @@ public class BlogService {
             throw new IllegalArgumentException("권한이 없습니다.");
         }
     }
+
+    public Article save(AddArticleRequest addArticleRequest, String userName){
+        return blogRepository.save(addArticleRequest.toEntity(userName));
+    }
+
 }

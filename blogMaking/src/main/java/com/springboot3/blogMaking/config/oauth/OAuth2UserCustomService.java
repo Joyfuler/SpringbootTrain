@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class OAuth2UserCustomerService extends DefaultOAuth2UserService {
+public class OAuth2UserCustomService extends DefaultOAuth2UserService {
     private final UserRepository userRepository;
 
 
@@ -35,5 +35,3 @@ public class OAuth2UserCustomerService extends DefaultOAuth2UserService {
         return userRepository.save(user);
     }
 }
-
-
